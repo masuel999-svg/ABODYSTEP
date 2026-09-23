@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRAMMAR & VERBS ADVENTURE — ONLINE TEACHER HUB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #070b14 0%, #111827 50%, #070b14 100%);
+            color: #f3f4f6;
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(17, 24, 39, 0.96);
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(59, 130, 246, 0.35);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            transition: all 0.25s ease;
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.6);
+        }
+        .ltr-text {
+            direction: ltr;
+            text-align: left;
+        }
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070b14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body class="selection:bg-blue-500 selection:text-white pb-16">
+
+    <div id="app" class="max-w-6xl mx-auto px-4 py-8 min-h-screen flex flex-col justify-between">
+        
+        <!-- Header / Branding -->
+        <header class="glass-card rounded-3xl p-6 md:p-8 mb-8 shadow-2xl flex flex-col md:flex-row justify-between items-center gap-6 border-t-4 border-blue-500">
+            <div class="flex items-center gap-5">
+                <div class="w-18 h-18 rounded-2xl bg-blue-600 flex items-center justify-center text-4xl shadow-lg shadow-blue-500/40 p-3">
+                    📚
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-sky-400 leading-tight">
+                        GRAMMAR & VERBS ADVENTURE — ONLINE TEACHER HUB
+                    </h1>
+                    <p class="text-base md:text-lg text-slate-200 font-bold mt-1">
+                        كورس المعلم الحر | إعداد د. محسن الكاشف | Online Teacher Hub
+                    </p>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="flex items-center gap-6 bg-slate-900/95 px-6 py-3.5 rounded-2xl border border-slate-700 shadow-inner">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-amber-400 text-2xl">⭐</span>
+                    <span id="headerStars" class="font-black text-amber-300 text-xl">0</span>
+                </div>
+                <div class="h-8 w-px bg-slate-700"></div>
+                <div class="flex items-center gap-2.5">
+                    <span class="text-blue-400 text-2xl">🏆</span>
+                    <span id="headerPoints" class="font-black text-blue-300 text-xl">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Bar (Back Button) -->
+        <div id="navBarContainer" class="mb-6 hidden">
+            <button onclick="goBack()" class="flex items-center gap-3 px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-100 rounded-2xl border border-slate-600 text-lg font-bold transition-all shadow-lg cursor-pointer">
+                <span>⬅</span> <span>الرجوع للخلف (Back)</span>
+            </button>
+        </div>
+
+        <!-- Main Dynamic Viewport -->
+        <main id="mainView" class="flex-grow mb-8">
+            <!-- Dynamically injected content goes here -->
+        </main>
+
+        <!-- Footer -->
+        <footer class="text-center text-sm text-slate-400 py-6 border-t border-slate-800 font-semibold">
+            جميع الحقوق محفوظة © Online Teacher Hub — إعداد د. محسن الكاشف | كورس المعلم الحر للاختبارات
+        </footer>
+    </div>
+
+    <!-- Custom Notification Modal -->
+    <div id="customModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-lg w-full rounded-3xl p-8 border-2 border-blue-500/50 shadow-2xl text-center space-y-6">
+            <div id="modalIcon" class="text-6xl">🌟</div>
+            <h3 id="modalTitle" class="text-2xl font-black text-white">إنجاز جديد!</h3>
+            <p id="modalMessage" class="text-slate-200 text-lg leading-relaxed font-semibold"></p>
+            <button onclick="closeModal()" class="w-full py-4 btn-gradient text-white font-bold rounded-2xl shadow-lg text-lg cursor-pointer">
+                متابعة المغامرة 🚀
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const verbsData = {
+            regular: [
+                { base: "watch", v1: "watch / watches", v2: "watched", v3: "watched", ing: "watching", meaning: "يُشاهد" },
+                { base: "wash", v1: "wash / washes", v2: "washed", v3: "washed", ing: "washing", meaning: "يغسل" },
+                { base: "want", v1: "want / wants", v2: "wanted", v3: "wanted", ing: "wanting", meaning: "يريد" },
+                { base: "travel", v1: "travel / travels", v2: "traveled", v3: "traveled", ing: "traveling", meaning: "يسافر" },
+                { base: "play", v1: "play / plays", v2: "played", v3: "played", ing: "playing", meaning: "يلعب" },
+                { base: "visit", v1: "visit / visits", v2: "visited", v3: "visited", ing: "visiting", meaning: "يزور" },
+                { base: "clean", v1: "clean / cleans", v2: "cleaned", v3: "cleaned", ing: "cleaning", meaning: "ينظف" },
+                { base: "study", v1: "study / studies", v2: "studied", v3: "studied", ing: "studying", meaning: "يدرس" },
+                { base: "wait", v1: "wait / waits", v2: "waited", v3: "waited", ing: "waiting", meaning: "ينتظر" },
+                { base: "plant", v1: "plant / plants", v2: "planted", v3: "planted", ing: "planting", meaning: "يزرع" },
+                { base: "pass", v1: "pass / passes", v2: "passed", v3: "passed", ing: "passing", meaning: "يمرر / يجتاز" },
+                { base: "start", v1: "start / starts", v2: "started", v3: "started", ing: "starting", meaning: "يبدأ" },
+                { base: "finish", v1: "finish / finishes", v2: "finished", v3: "finished", ing: "finishing", meaning: "ينهي" },
+                { base: "live", v1: "live / lives", v2: "lived", v3: "lived", ing: "living", meaning: "يعيش" },
+                { base: "die", v1: "die / dies", v2: "died", v3: "died", ing: "dying", meaning: "يموت" },
+                { base: "move", v1: "move / moves", v2: "moved", v3: "moved", ing: "moving", meaning: "يتحرك / ينتقل" },
+                { base: "receive", v1: "receive / receives", v2: "received", v3: "received", ing: "receiving", meaning: "يستقبل" },
+                { base: "work", v1: "work / works", v2: "worked", v3: "worked", ing: "working", meaning: "يعمل" },
+                { base: "learn", v1: "learn / learns", v2: "learned", v3: "learned", ing: "learning", meaning: "يتعلم" },
+                { base: "retire", v1: "retire / retires", v2: "retired", v3: "retired", ing: "retiring", meaning: "يتقاعد" },
+                { base: "cook", v1: "cook / cooks", v2: "cooked", v3: "cooked", ing: "cooking", meaning: "يطبخ" },
+                { base: "bake", v1: "bake / bakes", v2: "baked", v3: "baked", ing: "baking", meaning: "يخبز" },
+                { base: "walk", v1: "walk / walks", v2: "walked", v3: "walked", ing: "walking", meaning: "يمشي" },
+                { base: "talk", v1: "talk / talks", v2: "talked", v3: "talked", ing: "talking", meaning: "يتحدث" },
+                { base: "carry", v1: "carry / carries", v2: "carried", v3: "carried", ing: "carrying", meaning: "يحمل" },
+                { base: "attend", v1: "attend / attends", v2: "attended", v3: "attended", ing: "attending", meaning: "يحضر" },
+                { base: "perform", v1: "perform / performs", v2: "performed", v3: "performed", ing: "performing", meaning: "يؤدي" },
+                { base: "like", v1: "like / likes", v2: "liked", v3: "liked", ing: "liking", meaning: "يحب" },
+                { base: "love", v1: "love / loves", v2: "loved", v3: "loved", ing: "loving", meaning: "يعشق / يحب" },
+                { base: "decide", v1: "decide / decides", v2: "decided", v3: "decided", ing: "deciding", meaning: "يقرر" },
+                { base: "look", v1: "look / looks", v2: "looked", v3: "looked", ing: "looking", meaning: "ينظر / يبدو" },
+                { base: "stay", v1: "stay / stays", v2: "stayed", v3: "stayed", ing: "staying", meaning: "يبقى / يقيم" },
+                { base: "attack", v1: "attack / attacks", v2: "attacked", v3: "attacked", ing: "attacking", meaning: "يهاجم" },
+                { base: "defend", v1: "defend / defends", v2: "defended", v3: "defended", ing: "defending", meaning: "يدافع" }
+            ],
+            irregular: [
+                { base: "be", v1: "am / is / are", v2: "was / were", v3: "been", ing: "being", meaning: "يكون" },
+                { base: "have", v1: "have / has", v2: "had", v3: "had", ing: "having", meaning: "يملك / يتناول" },
+                { base: "do", v1: "do / does", v2: "did", v3: "done", ing: "doing", meaning: "يفعل" },
+                { base: "go", v1: "go / goes", v2: "went", v3: "gone", ing: "going", meaning: "يذهب" },
+                { base: "come", v1: "come / comes", v2: "came", v3: "come", ing: "coming", meaning: "يأتي" },
+                { base: "eat", v1: "eat / eats", v2: "ate", v3: "eaten", ing: "eating", meaning: "يأكل" },
+                { base: "drink", v1: "drink / drinks", v2: "drank", v3: "drunk", ing: "drinking", meaning: "يشرب" },
+                { base: "find", v1: "find / finds", v2: "found", v3: "found", ing: "finding", meaning: "يجد" },
+                { base: "forget", v1: "forget / forgets", v2: "forgot", v3: "forgotten", ing: "forgetting", meaning: "ينسى" },
+                { base: "tell", v1: "tell / tells", v2: "told", v3: "told", ing: "telling", meaning: "يخبر" },
+                { base: "think", v1: "think / thinks", v2: "thought", v3: "thought", ing: "thinking", meaning: "يعتقد / يفكر" },
+                { base: "get", v1: "get / gets", v2: "got", v3: "got / gotten", ing: "getting", meaning: "يحصل على" },
+                { base: "give", v1: "give / gives", v2: "gave", v3: "given", ing: "giving", meaning: "يعطي" },
+                { base: "take", v1: "take / takes", v2: "took", v3: "taken", ing: "taking", meaning: "يأخذ" },
+                { base: "grow", v1: "grow / grows", v2: "grew", v3: "grown", ing: "growing", meaning: "يكبر / ينمو" },
+                { base: "sleep", v1: "sleep / sleeps", v2: "slept", v3: "slept", ing: "sleeping", meaning: "ينام" },
+                { base: "speak", v1: "speak / speaks", v2: "spoke", v3: "spoken", ing: "speaking", meaning: "يتكلم" },
+                { base: "wake", v1: "wake / wakes", v2: "woke", v3: "woken", ing: "waking", meaning: "يستيقظ" },
+                { base: "wear", v1: "wear / wears", v2: "wore", v3: "worn", ing: "wearing", meaning: "يرتدي" },
+                { base: "win", v1: "win / wins", v2: "won", v3: "won", ing: "winning", meaning: "يفوز" },
+                { base: "write", v1: "write / writes", v2: "wrote", v3: "written", ing: "writing", meaning: "يكتب" },
+                { base: "buy", v1: "buy / buys", v2: "bought", v3: "bought", ing: "buying", meaning: "يشتري" },
+                { base: "keep", v1: "keep / keeps", v2: "kept", v3: "kept", ing: "keeping", meaning: "يحفظ / يبقي" },
+                { base: "know", v1: "know / knows", v2: "knew", v3: "known", ing: "knowing", meaning: "يعرف" },
+                { base: "drive", v1: "drive / drives", v2: "drove", v3: "driven", ing: "driving", meaning: "يسوق" },
+                { base: "leave", v1: "leave / leaves", v2: "left", v3: "left", ing: "leaving", meaning: "يغادر / يترك" },
+                { base: "run", v1: "run / runs", v2: "ran", v3: "run", ing: "running", meaning: "يركض" },
+                { base: "say", v1: "say / says", v2: "said", v3: "said", ing: "saying", meaning: "يقول" },
+                { base: "see", v1: "see / sees", v2: "saw", v3: "seen", ing: "seeing", meaning: "يرى" },
+                { base: "sell", v1: "sell / sells", v2: "sold", v3: "sold", ing: "selling", meaning: "يبيع" },
+                { base: "send", v1: "send / sends", v2: "sent", v3: "sent", ing: "sending", meaning: "يرسل" },
+                { base: "read", v1: "read / reads", v2: "read", v3: "read", ing: "reading", meaning: "يقرأ" },
+                { base: "lose", v1: "lose / loses", v2: "lost", v3: "lost", ing: "losing", meaning: "يخسر / يفقد" },
+                { base: "make", v1: "make / makes", v2: "made", v3: "made", ing: "making", meaning: "يصنع" },
+                { base: "meet", v1: "meet / meets", v2: "met", v3: "met", ing: "meeting", meaning: "يقابل" },
+                { base: "ride", v1: "ride / rides", v2: "rode", v3: "ridden", ing: "riding", meaning: "يركب" },
+                { base: "ring", v1: "ring / rings", v2: "rang", v3: "rung", ing: "ringing", meaning: "يرن" },
+                { base: "mistake", v1: "mistake / mistakes", v2: "mistook", v3: "mistaken", ing: "mistaking", meaning: "يخطئ" }
+            ]
+        };
+
+        let state = {
+            currentScreen: 'home',
+            activeGrammarLevel: 1,
+            activeVerbsTab: 'regular',
+            learnedItems: JSON.parse(localStorage.getItem('oth_learned')) || [],
+            points: parseInt(localStorage.getItem('oth_points')) || 0,
+            stars: parseInt(localStorage.getItem('oth_stars')) || 0,
+            completedLevels: JSON.parse(localStorage.getItem('oth_completedLevels')) || { grammar: [1] },
+            examScores: JSON.parse(localStorage.getItem('oth_examScores')) || {},
+            screenHistory: ['home']
+        };
+
+        function saveState() {
+            localStorage.setItem('oth_learned', JSON.stringify(state.learnedItems));
+            localStorage.setItem('oth_points', state.points);
+            localStorage.setItem('oth_stars', state.stars);
+            localStorage.setItem('oth_completedLevels', JSON.stringify(state.completedLevels));
+            localStorage.setItem('oth_examScores', JSON.stringify(state.examScores));
+            updateHeader();
+        }
+
+        function updateHeader() {
+            document.getElementById('headerStars').innerText = state.stars;
+            document.getElementById('headerPoints').innerText = state.points;
+        }
+
+        function navigateTo(screen, params = {}) {
+            if (state.currentScreen !== screen) {
+                state.screenHistory.push(screen);
+            }
+            state.currentScreen = screen;
+            if (params.grammarLevel) state.activeGrammarLevel = params.grammarLevel;
+            if (params.verbsTab) state.activeVerbsTab = params.verbsTab;
+
+            const navContainer = document.getElementById('navBarContainer');
+            if (state.currentScreen === 'home') {
+                navContainer.classList.add('hidden');
+                state.screenHistory = ['home'];
+            } else {
+                navContainer.classList.remove('hidden');
+            }
+
+            render();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goBack() {
+            if (state.screenHistory.length > 1) {
+                state.screenHistory.pop();
+                state.currentScreen = state.screenHistory[state.screenHistory.length - 1];
+                if (state.currentScreen === 'home') {
+                    document.getElementById('navBarContainer').classList.add('hidden');
+                }
+                render();
+            } else {
+                navigateTo('home');
+            }
+        }
+
+        function showModal(title, message, icon = '🌟') {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalMessage').innerText = message;
+            document.getElementById('modalIcon').innerText = icon;
+            document.getElementById('customModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('customModal').classList.add('hidden');
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.85;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                showModal('النطق غير متوفر', 'متصفحك لا يدعم خاصية التحدث الصوتي.', '⚠️');
+            }
+        }
+
+        function render() {
+            updateHeader();
+            const main = document.getElementById('mainView');
+            
+            switch (state.currentScreen) {
+                case 'home':
+                    main.innerHTML = renderHomeScreen();
+                    break;
+                case 'verbsMenu':
+                    main.innerHTML = renderVerbsScreen();
+                    break;
+                case 'grammarMenu':
+                    main.innerHTML = renderGrammarMenuScreen();
+                    break;
+                case 'grammarLearn':
+                    main.innerHTML = renderGrammarLearnScreen();
+                    break;
+                case 'grammarExam':
+                    main.innerHTML = renderGrammarExamScreen();
+                    break;
+                case 'progressMenu':
+                    main.innerHTML = renderProgressScreen();
+                    break;
+                case 'achievementsMenu':
+                    main.innerHTML = renderAchievementsScreen();
+                    break;
+                default:
+                    main.innerHTML = renderHomeScreen();
+            }
+        }
+
+        function renderHomeScreen() {
+            return `
+                <div class="space-y-8">
+                    <div class="glass-card rounded-3xl p-8 md:p-12 text-center relative overflow-hidden shadow-2xl border-2 border-blue-500/40">
+                        <span class="inline-block px-5 py-2 bg-blue-500/20 text-blue-300 rounded-full text-base font-black mb-4 border border-blue-500/40">
+                            Grammar & Verbs Adventure — Online Teacher Hub
+                        </span>
+                        <h2 class="text-3xl md:text-5xl font-black text-white mb-5 leading-snug">
+                            تأسيس القرامر وتصريف الأفعال باحترافية 🚀
+                        </h2>
+                        <p class="text-slate-200 text-lg md:text-xl max-w-4xl mx-auto mb-8 leading-relaxed font-semibold">
+                            شرح تفصيلي شامل لكل الأزمنة وقواعد الكفايات من الصفر، مع 60 سؤالاً مختلفاً وغير مكرر نهائياً لكل مستوى، وتصريفات كاملة للأفعال العادية والشاذة، واختبارات صارمة بنسبة نجاح 90%!
+                        </p>
+                        <div class="inline-flex items-center gap-3 bg-slate-900/95 px-6 py-3.5 rounded-2xl border border-slate-700 text-base font-black text-amber-300 shadow">
+                            <span>🎓 كورس المعلم الحر</span>
+                            <span>•</span>
+                            <span>إعداد د. محسن الكاشف</span>
+                            <span>•</span>
+                            <span>Online Teacher Hub</span>
+                        </div>
+                    </div>
+
+                    <!-- Main Navigation Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div onclick="navigateTo('verbsMenu')" class="glass-card rounded-3xl p-8 hover:border-blue-500 cursor-pointer transition-all duration-300 group shadow-xl flex flex-col justify-between">
+                            <div>
+                                <div class="w-18 h-18 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform">
+                                    📖
+                                </div>
+                                <h3 class="text-2xl font-black text-white mb-3">Verbs & Conjugations — تصريف الأفعال</h3>
+                                <p class="text-base text-slate-300 font-semibold leading-relaxed">قائمة شاملة للأفعال العادية (Regular) والشاذة (Irregular) مع V1 و V2 و V3 و Ing ونطقها الصوتي.</p>
+                            </div>
+                            <div class="mt-8 flex items-center justify-between text-base text-blue-400 font-black">
+                                <span>استعراض الأفعال</span>
+                                <span class="group-hover:translate-x-1 transition-transform">⬅</span>
+                            </div>
+                        </div>
+
+                        <div onclick="navigateTo('grammarMenu')" class="glass-card rounded-3xl p-8 hover:border-indigo-500 cursor-pointer transition-all duration-300 group shadow-xl flex flex-col justify-between">
+                            <div>
+                                <div class="w-18 h-18 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform">
+                                    ⚙️
+                                </div>
+                                <h3 class="text-2xl font-black text-white mb-3">Grammar & 60-Q Exams — الأزمنة والقرامر</h3>
+                                <p class="text-base text-slate-300 font-semibold leading-relaxed">أقسام القرامر الكاملة، مع شرح تفصيلي و 60 سؤالاً فريداً وغير مكرر لكل مستوى واختبار بنسبة نجاح 90%.</p>
+                            </div>
+                            <div class="mt-8 flex items-center justify-between text-base text-indigo-400 font-black">
+                                <span>ابدأ القرامر والأزمنة</span>
+                                <span class="group-hover:translate-x-1 transition-transform">⬅</span>
+                            </div>
+                        </div>
+
+                        <div onclick="navigateTo('progressMenu')" class="glass-card rounded-3xl p-8 hover:border-amber-500 cursor-pointer transition-all duration-300 group shadow-xl flex flex-col justify-between">
+                            <div>
+                                <div class="w-18 h-18 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform">
+                                    📊
+                                </div>
+                                <h3 class="text-2xl font-black text-white mb-3">My Progress — تقدمي</h3>
+                                <p class="text-base text-slate-300 font-semibold leading-relaxed">تابع الأفعال المتقنة، النقاط، النجوم، ونتائج اختبارات 90% بدقة.</p>
+                            </div>
+                            <div class="mt-8 flex items-center justify-between text-base text-amber-400 font-black">
+                                <span>عرض التقدم</span>
+                                <span class="group-hover:translate-x-1 transition-transform">⬅</span>
+                            </div>
+                        </div>
+
+                        <div onclick="navigateTo('achievementsMenu')" class="glass-card rounded-3xl p-8 hover:border-sky-500 cursor-pointer transition-all duration-300 group shadow-xl flex flex-col justify-between">
+                            <div>
+                                <div class="w-18 h-18 rounded-2xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform">
+                                    🏆
+                                </div>
+                                <h3 class="text-2xl font-black text-white mb-3">Achievements — الأوسمة</h3>
+                                <p class="text-base text-slate-300 font-semibold leading-relaxed">شاهد أوسمة التفوق واجتياز اختبارات الكفايات بنجاح تام.</p>
+                            </div>
+                            <div class="mt-8 flex items-center justify-between text-base text-sky-400 font-black">
+                                <span>عرض الأوسمة</span>
+                                <span class="group-hover:translate-x-1 transition-transform">⬅</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderVerbsScreen() {
+            const list = verbsData[state.activeVerbsTab];
+            let learnedCount = list.filter(item => state.learnedItems.includes(item.base)).length;
+
+            return `
+                <div class="space-y-8 max-w-5xl mx-auto">
+                    <div class="glass-card rounded-3xl p-8 border border-blue-500/40 shadow-xl flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-black text-white mb-2">📖 تصريفات الأفعال (Verbs Conjugations)</h2>
+                            <p class="text-base text-slate-200 font-semibold">تعلم تصريفات الأفعال العادية والشاذة (V1, V2, V3, V-ing) مع النطق الصحيح ونقاط الإتقان.</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <button onclick="navigateTo('verbsMenu', {verbsTab: 'regular'})" class="px-6 py-3.5 rounded-2xl text-base font-black border transition-all cursor-pointer ${state.activeVerbsTab === 'regular' ? 'btn-gradient text-white shadow-lg' : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800'}">
+                                أفعال منتظمة (Regular)
+                            </button>
+                            <button onclick="navigateTo('verbsMenu', {verbsTab: 'irregular'})" class="px-6 py-3.5 rounded-2xl text-base font-black border transition-all cursor-pointer ${state.activeVerbsTab === 'irregular' ? 'btn-gradient text-white shadow-lg' : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800'}">
+                                أفعال شاذة (Irregular)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-3xl p-8 border border-slate-700 shadow-2xl space-y-6">
+                        <div class="flex justify-between items-center pb-4 border-b border-slate-800 text-lg font-black text-slate-300">
+                            <span>القائمة الرسمية للأفعال (${list.length} فعلاً)</span>
+                            <span class="text-blue-400">تم إتقان: ${learnedCount} / ${list.length} ⭐</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 max-h-[600px] overflow-y-auto p-2">
+                            ${list.map((v) => {
+                                const isLearned = state.learnedItems.includes(v.base);
+                                return `
+                                    <div class="bg-slate-900 p-6 rounded-2xl border ${isLearned ? 'border-emerald-500/50' : 'border-slate-800'} space-y-3 shadow-inner flex flex-col justify-between">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <div class="flex items-center gap-3">
+                                                    <span class="text-2xl font-black text-white ltr-text">${v.base}</span>
+                                                    <button onclick="speakText('${v.base}')" class="w-10 h-10 bg-blue-600 hover:bg-blue-500 text-white rounded-xl flex items-center justify-center text-lg shadow cursor-pointer">🔊</button>
+                                                </div>
+                                                <p class="text-lg font-bold text-amber-400 mt-1">${v.meaning}</p>
+                                            </div>
+                                            <div>
+                                                ${isLearned ? 
+                                                    `<span class="px-4 py-1.5 bg-emerald-500/20 text-emerald-300 rounded-xl text-xs font-black border border-emerald-500/40">مُتقن ✅</span>` :
+                                                    `<button onclick="markVerbLearned('${v.base}')" class="px-4 py-2 btn-gradient text-white text-xs font-black rounded-xl shadow cursor-pointer">أتقنت الفِعل ⭐</button>`
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-4 gap-2 pt-3 border-t border-slate-800 text-center ltr-text">
+                                            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                                                <span class="block text-[10px] text-slate-400 font-bold">V1</span>
+                                                <span class="text-xs font-black text-blue-300">${v.v1}</span>
+                                            </div>
+                                            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                                                <span class="block text-[10px] text-slate-400 font-bold">V2</span>
+                                                <span class="text-xs font-black text-indigo-300">${v.v2}</span>
+                                            </div>
+                                            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                                                <span class="block text-[10px] text-slate-400 font-bold">V3</span>
+                                                <span class="text-xs font-black text-purple-300">${v.v3}</span>
+                                            </div>
+                                            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                                                <span class="block text-[10px] text-slate-400 font-bold">ING</span>
+                                                <span class="text-xs font-black text-emerald-300">${v.ing}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function markVerbLearned(base) {
+            if (!state.learnedItems.includes(base)) {
+                state.learnedItems.push(base);
+                state.points += 1;
+                state.stars += 1;
+                saveState();
+                showModal('أحسنت!', `لقد أتقنت الفعل "${base}" وحصلت على نقطة ونجمة جديدة!`, '⭐');
+                render();
+            }
+        }
+
+        function renderGrammarMenuScreen() {
+            const levels = [
+                { id: 1, title: "1. Tenses (أزمنة المضارع، الماضي، التام، والمستقبل)", desc: "شرح شامل ومفصل لجميع أزمنة أكاديمية المعلم الحر مع الكلمات الدالة وتصريفات الفعل و 60 سؤالاً فريداً وغير مكرر." },
+                { id: 2, title: "2. Time Connectors & If Conditions (روابط الزمن وحالات إيف)", desc: "شرح الروابط الزمنية (While, When, After, Before) وحالات إيف الأولى والثانية والثالثة وصيغ التمني (Wish) و 60 سؤالاً فريداً." },
+                { id: 3, title: "3. Relative Clauses & Pronouns (ضمائر الوصل والضمائر)", desc: "شرح (Who, Which, Whose, Whom, That, What) وجميع الضمائر (فاعل، مفعول، ملكية، منعكسة) و 60 سؤالاً فريداً." },
+                { id: 4, title: "4. Countable/Uncountable, Adjectives/Adverbs & Modals (المعدود، الصفات، والأفعال الناقصة)", desc: "شرح المعدود وغير المعدود، المقارنة والتفضيل، الأفعال الناقصة (Must, Should, Could have) و 60 سؤالاً فريداً." }
+            ];
+
+            let html = `
+                <div class="space-y-8 max-w-5xl mx-auto">
+                    <div class="glass-card rounded-3xl p-8 border border-indigo-500/40 shadow-xl">
+                        <h2 class="text-2xl md:text-3xl font-black text-white mb-3">⚙️ قسم القرامر والأزمنة (Grammar & 60-Q Exams)</h2>
+                        <p class="text-base text-slate-200 font-semibold">شرح تفاعلي خطوة بخطوة من الصفر لكل أقسام القرامر، مع 60 سؤالاً غير مكرر نهائياً لكل مستوى. شرط النجاح واجتياز الاختبار هو 90% (54 من 60)!</p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-6">
+            `;
+
+            levels.forEach(lvl => {
+                let isUnlocked = state.completedLevels.grammar.includes(lvl.id) || lvl.id === 1 || state.completedLevels.grammar.includes(lvl.id - 1);
+                let examScore = state.examScores[lvl.id];
+
+                html += `
+                    <div class="glass-card rounded-3xl p-8 border ${isUnlocked ? 'border-slate-700 hover:border-indigo-500' : 'border-slate-800 opacity-60'} transition-all shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                        <div>
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="text-xs bg-indigo-500/20 text-indigo-300 px-4 py-1.5 rounded-xl border border-indigo-500/30 font-black">مستوى القرامر ${lvl.id}</span>
+                                <h3 class="font-black text-white text-xl md:text-2xl">${lvl.title}</h3>
+                            </div>
+                            <p class="text-base text-slate-300 font-semibold max-w-3xl leading-relaxed">${lvl.desc}</p>
+                            ${examScore !== undefined ? `<p class="text-base font-black text-amber-400 mt-3">⭐ أعلى نتيجة اختبار: ${examScore} / 60 ${examScore >= 54 ? '(ناجح بنسبة 90%+ ✅)' : '(يحتاج إعادة محاولة للوصول إلى 90% ⚠️)'}</p>` : ''}
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                            ${isUnlocked ? `
+                                <button onclick="navigateTo('grammarLearn', {grammarLevel: ${lvl.id}})" class="py-4 px-7 btn-gradient text-white text-base font-black rounded-2xl shadow cursor-pointer">
+                                    📖 الشرح والتدريبات التفاعلية
+                                </button>
+                                <button onclick="navigateTo('grammarExam', {grammarLevel: ${lvl.id}})" class="py-4 px-7 bg-indigo-600 hover:bg-indigo-500 text-white text-base font-black rounded-2xl shadow cursor-pointer">
+                                    📝 امتحان 60 سؤالاً فريداً (90% للنجاح)
+                                </button>
+                            ` : `
+                                <div class="px-6 py-4 bg-slate-900 text-slate-400 text-base font-black rounded-2xl border border-slate-700 flex items-center gap-3">
+                                    🔒 المستوى مغلق (أنهِ المستوى السابق بدرجة 90%+ أي 54/60)
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div></div>`;
+            return html;
+        }
+
+        let grammarStepIndex = 0;
+        let interactiveAnswers = {};
+
+        function renderGrammarLearnScreen() {
+            const level = state.activeGrammarLevel;
+            const steps = getGrammarSteps(level);
+
+            if (grammarStepIndex >= steps.length) grammarStepIndex = steps.length - 1;
+            if (grammarStepIndex < 0) grammarStepIndex = 0;
+
+            const currentStep = steps[grammarStepIndex];
+
+            return `
+                <div class="space-y-8 max-w-4xl mx-auto">
+                    <div class="glass-card rounded-3xl p-6 flex justify-between items-center border border-indigo-500/40 shadow-xl">
+                        <div>
+                            <span class="text-xs bg-indigo-500/20 text-indigo-300 px-4 py-1.5 rounded-xl font-black border border-indigo-500/30">Grammar Level ${level}</span>
+                            <h3 class="font-black text-white text-xl mt-1">شرح تأسيس القرامر (Online Teacher Hub)</h3>
+                        </div>
+                        <button onclick="navigateTo('grammarExam', {grammarLevel: ${level}})" class="py-3.5 px-7 btn-gradient text-white text-base font-black rounded-2xl shadow cursor-pointer">
+                            الانتقال لامتحان 60 سؤالاً 📝
+                        </button>
+                    </div>
+
+                    <!-- Step Progress Bar -->
+                    <div class="glass-card rounded-3xl p-6 border border-slate-700 shadow space-y-3">
+                        <div class="flex justify-between text-base font-black text-slate-200">
+                            <span>الخطوة ${grammarStepIndex + 1} من ${steps.length}</span>
+                            <span>${Math.round(((grammarStepIndex + 1) / steps.length) * 100)}% مكتمل</span>
+                        </div>
+                        <div class="w-full bg-slate-900 rounded-full h-4 overflow-hidden border border-slate-800">
+                            <div class="bg-indigo-500 h-4 rounded-full transition-all duration-300" style="width: ${((grammarStepIndex + 1) / steps.length) * 100}%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Step Content Card -->
+                    <div class="glass-card rounded-3xl p-8 md:p-12 border-2 border-indigo-500/50 shadow-2xl space-y-8">
+                        <h4 class="text-2xl md:text-3xl font-black text-indigo-300 border-b border-slate-800 pb-5 flex items-center gap-3">
+                            <span>🔹</span> ${currentStep.title}
+                        </h4>
+
+                        <div class="text-slate-200 text-lg md:text-xl font-semibold leading-relaxed space-y-5 whitespace-pre-line">
+                            ${currentStep.explanation}
+                        </div>
+
+                        ${currentStep.examples ? `
+                            <div class="bg-slate-900/95 p-6 rounded-3xl border border-slate-800 space-y-4 shadow-inner">
+                                <p class="text-base font-black text-amber-400">أمثلة توضيحية من الشرح:</p>
+                                ${currentStep.examples.map(ex => `
+                                    <div class="space-y-2">
+                                        <p class="text-lg font-black text-blue-300 ltr-text">🇬🇧 ${ex.en}</p>
+                                        <p class="text-lg text-slate-200 font-semibold">🇸🇦 ${ex.ar}</p>
+                                        ${ex.note ? `<p class="text-sm text-amber-300 font-bold">💡 ${ex.note}</p>` : ''}
+                                    </div>
+                                `).join('<div class="my-3 border-t border-slate-800"></div>')}
+                            </div>
+                        ` : ''}
+
+                        <!-- Interactive Micro-Exercise for this step -->
+                        ${currentStep.exercise ? `
+                            <div class="bg-indigo-950/40 p-8 rounded-3xl border border-indigo-500/40 space-y-6">
+                                <p class="text-lg md:text-xl font-black text-indigo-200">✍️ تمرين تفاعلي فوري: ${currentStep.exercise.question}</p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    ${currentStep.exercise.options.map((opt, oIdx) => {
+                                        const ansKey = `step_${grammarStepIndex}`;
+                                        const isSelected = interactiveAnswers[ansKey] === oIdx;
+                                        const isCorrect = oIdx === currentStep.exercise.correct;
+                                        const isAnswered = interactiveAnswers[ansKey] !== undefined;
+                                        
+                                        let btnStyle = 'bg-slate-900 border-slate-700 text-slate-100 hover:bg-slate-800';
+                                        if (isAnswered) {
+                                            if (isCorrect) btnStyle = 'bg-emerald-600/40 border-emerald-500 text-emerald-200';
+                                            else if (isSelected) btnStyle = 'bg-rose-600/40 border-rose-500 text-rose-200';
+                                        }
+
+                                        return `
+                                            <button onclick="answerGrammarStep(${grammarStepIndex}, ${oIdx})" class="p-5 rounded-2xl text-base font-black border transition-all cursor-pointer ltr-text text-center ${btnStyle}">
+                                                ${opt}
+                                            </button>
+                                        `;
+                                    }).join('')}
+                                </div>
+                                ${interactiveAnswers[`step_${grammarStepIndex}`] !== undefined ? `
+                                    <p class="text-base font-black ${interactiveAnswers[`step_${grammarStepIndex}`] === currentStep.exercise.correct ? 'text-emerald-400' : 'text-rose-400'} pt-3">
+                                        ${interactiveAnswers[`step_${grammarStepIndex}`] === currentStep.exercise.correct ? '✅ إجابة صحيحة! أحسنت يا بطل.' : '❌ إجابة غير دقيقة. راجع الشرح في الأعلى.'}
+                                    </p>
+                                ` : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="flex justify-between items-center gap-6">
+                        <button ${grammarStepIndex === 0 ? 'disabled' : ''} onclick="grammarStepIndex--; render();" class="flex-1 py-4 bg-slate-800 hover:bg-slate-700 text-white font-black rounded-2xl border border-slate-700 shadow text-lg cursor-pointer disabled:opacity-40">
+                            ⬅ الخطوة السابقة
+                        </button>
+                        <button ${grammarStepIndex === steps.length - 1 ? 'disabled' : ''} onclick="grammarStepIndex++; render();" class="flex-1 py-4 btn-gradient text-white font-black rounded-2xl shadow text-lg cursor-pointer disabled:opacity-40">
+                            الخطوة التالية ➡
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function answerGrammarStep(stepIdx, optionIdx) {
+            interactiveAnswers[`step_${stepIdx}`] = optionIdx;
+            render();
+        }
+
+        function getGrammarSteps(level) {
+            if (level === 1) {
+                return [
+                    {
+                        title: "1. المضارع البسيط (Present Simple)",
+                        explanation: "يعبر المضارع البسيط عن العادات، الحقائق، والروتين المتكرر.\n• التكوين:\n- مع الجمع (We, You, They, I) نستخدم الفعل المجرد (V / Base verb).\n- مع المفرد (He, She, It) نضيف للفعل (s أو es أو ies).\n• الكلمات الدالة:\nAlways, Usually, Often, Sometimes, Regularly, Never, Every (day/week/year), On Mondays.",
+                        examples: [
+                            { en: "When we visit the library, we usually study.", ar: "عندما نزرع المكتبة، عادة ما ندرس." },
+                            { en: "Ali often gets up very early.", ar: "علي غالباً ما يستيقظ مبكراً جداً." }
+                        ],
+                        exercise: {
+                            question: "Ali often ......... very early.",
+                            options: ["gets up", "get up", "got up", "getting up"],
+                            correct: 0
+                        }
+                    },
+                    {
+                        title: "2. المضارع المستمر (Present Progressive)",
+                        explanation: "يُستخدم للتعبير عما يحدث الآن في لحظة الكلام أو الأحداث المؤقتة.\n• التكوين:\n- I ➔ am + V-ing\n- He, She, It ➔ is + V-ing\n- We, You, They ➔ are + V-ing\n• الكلمات الدالة:\nNow, At the moment, Today, Tonight, These days.",
+                        examples: [
+                            { en: "Adam is reading a book now.", ar: "آدم يقرأ كتاباً الآن." },
+                            { en: "We are meeting them at 8 o'clock tonight.", ar: "سنقابلهم في الثامنة مساء الليلة." }
+                        ],
+                        exercise: {
+                            question: "Adam ......... a book now.",
+                            options: ["Reads", "is reads", "is reading", "reading"],
+                            correct: 2
+                        }
+                    },
+                    {
+                        title: "3. الماضي البسيط (Past Simple)",
+                        explanation: "يعبر عن حدث وقع وانتهى في الماضي.\n• التكوين:\nنستخدم صيغة الماضي من الفعل (V2) سواء كان منتظماً (بإضافة ed) أو شاذّاً.\n• الكلمات الدالة:\nYesterday, Last week, Ago, وفي أي سنة في الماضي.",
+                        examples: [
+                            { en: "They arrived yesterday morning.", ar: "وصلوا صباح أمس." }
+                        ],
+                        exercise: {
+                            question: "They ......... yesterday morning.",
+                            options: ["arrive", "arrived", "are arriving", "were arrived"],
+                            correct: 1
+                        }
+                    },
+                    {
+                        title: "4. الماضي المستمر (Past Progressive)",
+                        explanation: "يعبر عن حدث كان مستمراً في وقت ما في الماضي.\n• التكوين:\n- I, He, She, It ➔ was + V-ing\n- We, You, They ➔ were + V-ing\n• القاعدة الذهبية:\nكلما وجدت كلمة while (بينما) في الاختيارات المرتبطة بالماضي، اختر فوراً (was/were + V-ing).",
+                        examples: [
+                            { en: "While I was sleeping, he called me.", ar: "بينما كنت نائماً، اتصل بي." }
+                        ],
+                        exercise: {
+                            question: "While I ........., he called me.",
+                            options: ["sleep", "slept", "is sleeping", "was sleeping"],
+                            correct: 3
+                        }
+                    },
+                    {
+                        title: "5. المضارع التام (Present Perfect) و منذ/لمدة (Since & For)",
+                        explanation: "• التكوين:\n- I, We, You, They ➔ have + V3\n- He, She, It ➔ has + V3\n• الكلمات الدالة: Already, Lately, Yet, So far, Ever, Just.\n• الفرق بين Since و For:\n- For (لمدة): يأتي بعدها مدة زمنية إجمالية (for 4 years, for 3 days, for 5 hours).\n- Since (منذ): يأتي بعدها نقطة بداية محددة (since 2015, since May, since 3 p.m.).",
+                        examples: [
+                            { en: "She hasn't finished her work yet.", ar: "لم تنه عملها بعد." },
+                            { en: "Ben has been here for seven years.", ar: "بن هنا منذ سبع سنوات." }
+                        ],
+                        exercise: {
+                            question: "Ben has been here ......... seven years.",
+                            options: ["for", "from", "since", "during"],
+                            correct: 0
+                        }
+                    }
+                ];
+            } else if (level === 2) {
+                return [
+                    {
+                        title: "1. مسارات الروابط الزمنية (Time Connectors)",
+                        explanation: "مسارات الربط هي مفتاح الحل لكثير من جمل الاختبارات:\n1. While / When / As:\nيأتي بعدها (was/were + V-ing) والجهة المقابلة ماضي بسيط (V2).\n2. After / Before / As soon as / By the time / Until:\nيأتي بعدها ماضي تام (had + V3) أو ماضي بسيط (V2).\n• استثناء مهم جداً:\nإذا جاء بعد كلمة الربط (مثل Before أو After) فراغ مباشرة بدون فاعل، نستخدم صيغة (V-ing) مباشرة!",
+                        examples: [
+                            { en: "Before going to bed every night, remember to brush your teeth.", ar: "قبل الذهاب إلى السرير كل ليلة، تذكر تنظيف أسنانك." }
+                        ],
+                        exercise: {
+                            question: "Before ......... to bed every night, remember to brush your teeth.",
+                            options: ["go", "to go", "going", "gone"],
+                            correct: 2
+                        }
+                    },
+                    {
+                        title: "2. حالات إيف الشرطية (IF Conditions)",
+                        explanation: "• الحالة الأولى (First Conditional):\nمضارع بسيط (V / V+s) ➔ will + المصدر.\n• الحالة الثانية (Second Conditional):\nماضي بسيط (V2 أو were للجميع) ➔ would + المصدر.\n• الحالة الثالثة (Third Conditional):\nماضي تام (had + V3) ➔ would have + V3.\n• قاعدة ذهبية: لا تستخدم (was) أبداً في الحالة الثانية مع الضمائر المفردة، بل نستخدم (were) دائماً!",
+                        examples: [
+                            { en: "If I were a bird, I would fly far away.", ar: "لو كنت طائراً لكنت طرت بعيداً." },
+                            { en: "If he had worked harder, he would have passed.", ar: "لو عمل بجد أكبر لاجتاز امتحاناته." }
+                        ],
+                        exercise: {
+                            question: "If I ......... a bird, I would fly far away.",
+                            options: ["be", "am", "been", "were"],
+                            correct: 3
+                        }
+                    }
+                ];
+            } else if (level === 3) {
+                return [
+                    {
+                        title: "1. ضمائر الوصل (Relative Clauses)",
+                        explanation: "• Who / Whom: للعاقل (إذا اجتمعا في الاختيارات نختار Who دائماً).\n• Which: لغير العاقل والتخيير.\n• That: بديل لـ Who و Which.\n• Whose: للملكية (يأتي بعدها اسم الشيء المملوك).\n• What: تُستخدم للوصل إذا كان ما قبلها فعل.",
+                        examples: [
+                            { en: "The man who lives next door is a doctor.", ar: "الرجل الذي يعيش بجوارنا هو طبيب." },
+                            { en: "The boy whose bicycle was stolen got a new one.", ar: "الولد الذي سُرقت دراجته حصل على دراجة جديدة." }
+                        ],
+                        exercise: {
+                            question: "The man ......... lives next door is a doctor.",
+                            options: ["who", "which", "whom", "whose"],
+                            correct: 0
+                        }
+                    },
+                    {
+                        title: "2. جدول الضمائر الشامل (Pronouns)",
+                        explanation: "• فاعل (Subject): يأتي ببداية الجملة (He, She, I).\n• مفعول (Object): يأتي بعد الفعل أو حرف الجر (him, her, me).\n• ملكية تليها اسم (My car, Her book).\n• ملكية مستقلة لا تليها اسم (Mine, Hers).\n• منعكسة (Reflexive): تطابق الفاعل (Myself, Himself, Themselves).",
+                        examples: [
+                            { en: "Bob and Tom enjoyed themselves on the trip.", ar: "استمتع بوب وتوم بأنفسهما في الرحلة." }
+                        ],
+                        exercise: {
+                            question: "Bob and Tom enjoyed ......... so much on the school trip.",
+                            options: ["ourselves", "oneselves", "theirselves", "themselves"],
+                            correct: 3
+                        }
+                    }
+                ];
+            } else {
+                return [
+                    {
+                        title: "1. المعدود وغير المعدود (Countable & Uncountable)",
+                        explanation: "• معدود (Countable): يأخذ جمعاً وفعل جمع (Pens, books, cars) وتستخدم معها (Many, Few, A few).\n• غير معدود (Uncountable): مفرد دائماً (Water, milk, money, information, traffic) وتستخدم معها (Much, Little, A little).\n• ملاحظة مهمة: أول ما تشوف كلمة (only) اختر (a few).",
+                        examples: [
+                            { en: "Normally I'm busy, but I have a few hours.", ar: "عادة أنا مشغول، لكني أملك بضع ساعات." }
+                        ],
+                        exercise: {
+                            question: "Normally I'm busy, but I have ......... hours to go out.",
+                            options: ["little", "a little", "a few", "much"],
+                            correct: 2
+                        }
+                    },
+                    {
+                        title: "2. الأفعال الناقصة (Modal Auxiliaries)",
+                        explanation: "• Must: للضرورة والإلزام.\n• Should: للنصيحة.\n• Could: للقدرة في الماضي.\n• Could have + V3: تعبير معناه (كان من الممكن أن يحدث كذا لكنه لم يحدث).\n• Had to: للضرورة في الماضي.",
+                        examples: [
+                            { en: "Lucy could have gone to London, but she didn't.", ar: "كان بإمكان لوسي الذهاب للندن مع عائلتها، لكنها لم تفعل." }
+                        ],
+                        exercise: {
+                            question: "Lucy could have gone to London with her family, .........",
+                            options: ["but she didn't", "so she didn't", "and she did", "but she did"],
+                            correct: 0
+                        }
+                    }
+                ];
+            }
+        }
+
+        let examState = {
+            level: null,
+            questions: [],
+            currentIndex: 0,
+            userAnswers: {},
+            submitted: false,
+            score: 0
+        };
+
+        function renderGrammarExamScreen() {
+            const level = state.activeGrammarLevel;
+            if (!examState.questions.length || examState.level !== level) {
+                initExam(level);
+            }
+
+            const q = examState.questions[examState.currentIndex];
+
+            if (examState.submitted) {
+                let passed = examState.score >= 54; // 90% of 60
+                let percentage = Math.round((examState.score / 60) * 100);
+                return `
+                    <div class="glass-card rounded-3xl p-8 md:p-12 max-w-3xl mx-auto text-center space-y-6 border border-slate-700 shadow-2xl">
+                        <div class="text-6xl">${passed ? '🏆' : '⚠️'}</div>
+                        <h3 class="text-3xl font-black text-white">نتيجة امتحان المستوى ${level} (60 سؤالاً)</h3>
+                        <div class="text-5xl font-black ${passed ? 'text-emerald-400' : 'text-rose-400'}">
+                            ${examState.score} / 60 (${percentage}%)
+                        </div>
+                        <p class="text-lg font-semibold text-slate-200">
+                            ${passed ? 'مبارك تاما! لقد اجتزت الاختبار بنسبة 90%+ وتم فتح المستوى التالي!' : 'لم تصل لدرجة النجاح المطلوبة (90% أي 54 من 60). راجع الأخطاء أدناه وحاول مرة أخرى.'}
+                        </p>
+
+                        <div class="space-y-3 text-right max-h-72 overflow-y-auto p-3">
+                            <h4 class="font-black text-white text-base">مراجعة الأسئلة والأخطاء:</h4>
+                            ${examState.questions.map((quest, idx) => {
+                                let userAns = examState.userAnswers[idx];
+                                let isCorr = userAns === quest.correct;
+                                return `
+                                    <div class="p-4 rounded-2xl bg-slate-900 border ${isCorr ? 'border-emerald-500/40 text-emerald-300' : 'border-rose-500/40 text-rose-300'} text-sm space-y-1">
+                                        <p class="font-black text-white ltr-text">${idx + 1}. ${quest.question}</p>
+                                        <p>إجابتك: ${userAns !== undefined ? quest.options[userAns] : 'لم تقم بالإجابة'} ${isCorr ? '✅' : '❌'}</p>
+                                        ${!isCorr ? `<p class="text-emerald-400 font-bold">الإجابة الصحيحة: ${quest.options[quest.correct]}</p>` : ''}
+                                        <p class="text-slate-400 font-semibold">💡 التفسير: ${quest.explanation}</p>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+
+                        <div class="flex gap-4 pt-4">
+                            <button onclick="initExam(${level}); render();" class="flex-1 py-4 bg-slate-800 hover:bg-slate-700 text-white font-black rounded-2xl border border-slate-700 text-base cursor-pointer">
+                                إعادة الامتحان بـ 60 سؤالاً جديداً 🔄
+                            </button>
+                            <button onclick="navigateTo('grammarMenu')" class="flex-1 py-4 btn-gradient text-white font-black rounded-2xl text-base cursor-pointer">
+                                العودة لقائمة القرامر ⚙️
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="glass-card rounded-3xl p-8 md:p-12 max-w-3xl mx-auto space-y-8 border border-slate-700 shadow-2xl">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-5">
+                        <span class="text-base font-black text-indigo-400">امتحان المستوى ${level} (60 سؤالاً فريداً وغير مكرر)</span>
+                        <span class="text-sm bg-slate-900 text-slate-200 px-5 py-2 rounded-xl font-bold border border-slate-800">السؤال ${examState.currentIndex + 1} من 60</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 class="text-xl md:text-2xl font-black text-white ltr-text text-center">${q.question}</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-4">
+                        ${q.options.map((opt, idx) => `
+                            <button onclick="selectExamAnswer(${idx})" class="w-full p-5 rounded-2xl text-right text-lg font-black border transition-all cursor-pointer ${examState.userAnswers[examState.currentIndex] === idx ? 'bg-indigo-600 border-indigo-400 text-white shadow-xl scale-102' : 'bg-slate-900 border-slate-700 text-slate-100 hover:bg-slate-800'}">
+                                <span class="ml-3 text-indigo-300">${['أ', 'ب', 'ج', 'د'][idx]})</span> ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <div class="flex justify-between items-center pt-6 border-t border-slate-800">
+                        <button ${examState.currentIndex === 0 ? 'disabled' : ''} onclick="examState.currentIndex--; render();" class="py-4 px-7 bg-slate-800 hover:bg-slate-700 text-slate-200 text-base font-black rounded-2xl cursor-pointer disabled:opacity-40">
+                            ⬅ السابق
+                        </button>
+                        ${examState.currentIndex < 59 ? `
+                            <button onclick="examState.currentIndex++; render();" class="py-4 px-9 btn-gradient text-white text-base font-black rounded-2xl cursor-pointer">
+                                التالي ➡
+                            </button>
+                        ` : `
+                            <button onclick="submitExam()" class="py-4 px-9 bg-emerald-600 hover:bg-emerald-500 text-white text-base font-black rounded-2xl shadow-xl cursor-pointer">
+                                تسليم الامتحان 🏁
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        function initExam(level) {
+            examState = {
+                level: level,
+                questions: generate60UniqueQuestions(level),
+                currentIndex: 0,
+                userAnswers: {},
+                submitted: false,
+                score: 0
+            };
+        }
+
+        function selectExamAnswer(optionIndex) {
+            examState.userAnswers[examState.currentIndex] = optionIndex;
+            render();
+        }
+
+        function submitExam() {
+            let score = 0;
+            examState.questions.forEach((q, idx) => {
+                if (examState.userAnswers[idx] === q.correct) score++;
+            });
+            examState.score = score;
+            examState.submitted = true;
+            state.examScores[examState.level] = score;
+
+            if (score >= 54) { // 90% of 60
+                state.points += 20;
+                state.stars += 10;
+                if (!state.completedLevels.grammar.includes(examState.level + 1) && examState.level < 4) {
+                    state.completedLevels.grammar.push(examState.level + 1);
+                }
+            }
+            saveState();
+            render();
+        }
+
+        function generate60UniqueQuestions(level) {
+            let templates = [];
+            if (level === 1) {
+                templates = [
+                    { q: "When we visit the library, we usually .........", ops: ["studies", "studying", "studied", "study"], corr: 3, exp: "مع الجمع we في المضارع البسيط نستخدم الفعل المجرد study." },
+                    { q: "Ali often ......... very early.", ops: ["gets up", "get up", "got up", "getting up"], corr: 0, exp: "مع المفرد الغائب Ali نضيف s للفعل (gets up)." },
+                    { q: "Adam ......... a book now.", ops: ["reads", "is reads", "is reading", "reading"], corr: 2, exp: "وجود now يدل على المضارع المستمر (is reading)." },
+                    { q: "We ......... them at 8 o'clock tonight.", ops: ["meet", "are meet", "are meeting", "meets"], corr: 2, exp: "ترتيب مستقبلي قريب في المضارع المستمر (are meeting)." },
+                    { q: "They ......... yesterday morning.", ops: ["arrive", "arrived", "are arriving", "were arrived"], corr: 1, exp: "yesterday يدل على الماضي البسيط (arrived)." },
+                    { q: "While I ........., he called me.", ops: ["sleep", "slept", "is sleeping", "was sleeping"], corr: 3, exp: "بعد while نستخدم الماضي المستمر (was sleeping)." },
+                    { q: "She hasn't finished her work .........", ops: ["already", "lately", "yet", "just"], corr: 2, exp: "yet تأتي في نهاية الجمل المنفية مع المضارع التام." },
+                    { q: "Ben has been here ......... seven years.", ops: ["for", "from", "since", "during"], corr: 0, exp: "seven years مدة زمنية إجمالية تأخذ for." },
+                    { q: "We ......... in the hot sun for an hour.", ops: ["have waited", "are waiting", "were waiting", "have been waiting"], corr: 3, exp: "وجود for مع استمرار الحدث يتطلب المضارع التام المستمر (have been waiting)." },
+                    { q: "Tomorrow I ......... travel to Jeddah.", ops: ["am going", "ought", "will", "would"], corr: 2, exp: "للتنبؤ المستقبلي نستخدم will + المصدر." },
+                    { q: "Water ......... at 100 degrees Celsius.", ops: ["boil", "boils", "boiled", "is boiling"], corr: 1, exp: "حقيقة علمية ثابتة في المضارع البسيط (boils)." },
+                    { q: "Look! The children ......... in the yard.", ops: ["play", "plays", "are playing", "played"], corr: 2, exp: "التنبيه Look! يدل على المضارع المستمر (are playing)." },
+                    { q: "My father ......... a new car last week.", ops: ["buy", "buys", "bought", "buying"], corr: 2, exp: "last week يدل على الماضي البسيط للشعل الشاذ buy وهو bought." },
+                    { q: "I ......... my homework when the phone rang.", ops: ["do", "did", "was doing", "have done"], corr: 2, exp: "حدث كان مستمراً عندما قطعه حدث في الماضي البسيط (was doing)." },
+                    { q: "How long ......... you known your best friend?", ops: ["do", "have", "are", "did"], corr: 1, exp: "السؤال عن المدة مع المضارع التام يبدأ بـ How long have." },
+                    { q: "She ......... to London twice this year.", ops: ["go", "went", "has gone", "has been"], corr: 3, exp: "التجربة الحياتية تأخذ has been to." },
+                    { q: "The train ......... at 9 a.m. every day.", ops: ["leave", "leaves", "is leaving", "left"], corr: 1, exp: "مواعيد الجداول الثابتة تعبر عنها بالمضارع البسيط (leaves)." },
+                    { q: "They ......... their dinner yet.", ops: ["haven't eaten", "didn't eat", "aren't eating", "hadn't eaten"], corr: 0, exp: "وجود yet في النهاية يدل على المضارع التام المنفي (haven't eaten)." },
+                    { q: "Listen! Someone ......... at the door.", ops: ["knock", "knocks", "is knocking", "knocked"], corr: 2, exp: "التنبيه Listen! يدل على المضارع المستمر (is knocking)." },
+                    { q: "He usually ......... coffee in the morning.", ops: ["drink", "drinks", "drank", "is drinking"], corr: 1, exp: "عادة مع المفرد He تأخذ (drinks)." },
+                    { q: "Cats ......... mice.", ops: ["catch", "catches", "caught", "catching"], corr: 0, exp: "حقيقة عامة مع الجمع cats تأخذ catch." },
+                    { q: "The sun ......... in the east.", ops: ["rise", "rises", "rose", "is rising"], corr: 1, exp: "حقيقة كونية ثابتة (rises)." },
+                    { q: "She ......... to the gym on Mondays.", ops: ["go", "goes", "went", "is going"], corr: 1, exp: "تكرار أسبوعي مع She يأخذ (goes)." },
+                    { q: "We ......... dinner right now.", ops: ["have", "has", "are having", "had"], corr: 2, exp: "حدث يحدث الآن (are having)." },
+                    { q: "I ......... what you mean.", ops: ["know", "am knowing", "knew", "known"], corr: 0, exp: "أفعال الإدراك لا تأخذ المستمر (know)." },
+                    { q: "He ......... French very well.", ops: ["speak", "speaks", "spoke", "is speaking"], corr: 1, exp: "حقيقة أو قدرة ثابتة مع He (speaks)." },
+                    { q: "They ......... a test tomorrow morning.", ops: ["have", "has", "are having", "had"], corr: 2, exp: "ترتيب مستقبلي في المضارع المستمر (are having)." },
+                    { q: "She ......... her keys yesterday.", ops: ["lose", "lost", "has lost", "losing"], corr: 1, exp: "yesterday يدل على الماضي البسيط (lost)." },
+                    { q: "I ......... never seen such a sunset.", ops: ["have", "has", "did", "was"], corr: 0, exp: "مع never في المضارع التام نستخدم have." },
+                    { q: "He has worked here ......... 2018.", ops: ["for", "since", "from", "in"], corr: 1, exp: "2018 نقطة بداية محددة تأخذ since." }
+                ];
+            } else if (level === 2) {
+                templates = [
+                    { q: "Before ......... to bed every night, brush your teeth.", ops: ["go", "to go", "going", "gone"], corr: 2, exp: "إذا جاء بعد كلمة الربط فراغ مباشرة بدون فاعل نستخدم V-ing (going)." },
+                    { q: "If I ......... a bird, I would fly far away.", ops: ["be", "am", "been", "were"], corr: 3, exp: "في الحالة الثانية لإيف، نستخدم were مع كل الضمائر ولا نستخدم was أبداً." },
+                    { q: "If he ......... harder, he would have passed.", ops: ["works", "will work", "worked", "had worked"], corr: 3, exp: "في الحالة الثالثة لإيف، يأتي بعد if ماضي تام (had worked)." },
+                    { q: "Maryam was tired, ......... she went to bed early.", ops: ["so", "but", "because", "although"], corr: 0, exp: "so تعبر عن النتيجة والترتيب المنطقي." },
+                    { q: "By the time I arrived, they ......... closed.", ops: ["already close", "had already closed", "have already closed", "would close"], corr: 1, exp: "بواسطة By the time يأتي الماضي التام (had already closed)." },
+                    { q: "Ali just got a job in Japan, ......... he wants to learn Japanese.", ops: ["but", "so", "so that", "since"], corr: 1, exp: "so تعبر عن النتيجة المترتبة." },
+                    { q: "I didn't know that neither Mr. Hill ......... Mr. Smith is from America.", ops: ["nor", "also", "either", "neither"], corr: 0, exp: "الرابط التوأمي لـ neither هو nor." },
+                    { q: "You can learn many languages at university. ........., you can learn French.", ops: ["For example", "In contrast", "In addition", "However"], corr: 0, exp: "For example لتوضيح وإعطاء مثال." },
+                    { q: "Although he studied hard, ......... he failed the test.", ops: ["so", "but", "yet", "no word needed"], corr: 3, exp: "مع Although لا نضع but في نفس الجملة باللغة الإنجليزية." },
+                    { q: "She went to work ......... being very sick.", ops: ["although", "despite", "because", "so"], corr: 1, exp: "despite يأتي بعدها اسم أو V-ing وتعبر عن التناقض." },
+                    { q: "While they were walking, it ......... to rain.", ops: ["start", "started", "is starting", "had started"], corr: 1, exp: "حدث قاطع في الماضي البسيط (started)." },
+                    { q: "If you heat ice, it .........", ops: ["melt", "melts", "will melt", "melted"], corr: 1, exp: "الحالة الصففرية لإيف (Zero Conditional) تعبر عن حقائق مضارع بسيط (melts)." },
+                    { q: "I wish I ......... a sports car.", ops: ["have", "had", "will have", "has"], corr: 1, exp: "التمني في الحاضر بـ Wish يأخذ الماضي البسيط (had)." },
+                    { q: "She will succeed ......... she works hard.", ops: ["if", "unless", "although", "because"], corr: 0, exp: "الشرط الصحيح للمعنى هو if (إذا)." },
+                    { q: "He didn't pass the exam ......... he didn't study.", ops: ["because", "although", "so", "despite"], corr: 0, exp: "لبيان السبب نستخدم because." },
+                    { q: "If it rains tomorrow, we ......... stay home.", ops: ["will", "would", "had", "did"], corr: 0, exp: "الحالة الأولى لإيف (will + المصدر)." },
+                    { q: "She went out ......... the heavy rain.", ops: ["although", "despite", "because", "so"], corr: 1, exp: "despite يأتي بعدها اسم (the heavy rain)." },
+                    { q: "He speaks English fluently ......... he lived in London.", ops: ["because", "although", "so", "despite"], corr: 0, exp: "لبيان السبب (because)." },
+                    { q: "I will call you ......... I arrive.", ops: ["as soon as", "during", "while", "until"], corr: 0, exp: "as soon as (بمجرد أن)." },
+                    { q: "She washed the dishes ......... she cooked dinner.", ops: ["after", "before", "while", "during"], corr: 0, exp: "after تعبر عن الترتيب الزمني الصحيح." }
+                ];
+            } else if (level === 3) {
+                templates = [
+                    { q: "The man ......... lives next door is a doctor.", ops: ["who", "which", "whom", "whose"], corr: 0, exp: "للفاعل العاقل نستخدم ضمير الوصل who." },
+                    { q: "Bob and Tom enjoyed ......... on the school trip.", ops: ["ourselves", "oneselves", "theirselves", "themselves"], corr: 3, exp: "الضمير المنعكس المناسب للجمع الغائب they هو themselves." },
+                    { q: "This is my car. The other one is .........", ops: ["my", "me", "mine", "myself"], corr: 2, exp: "ضمير الملكية المستقل الذي لا يليه اسم هو mine." },
+                    { q: "The boy ......... bicycle was stolen got a new one.", ops: ["who", "that", "which", "whose"], corr: 3, exp: "للملكية قبل اسم الشيء المملوك (bicycle) نستخدم whose." },
+                    { q: "Mrs. Jackson, ......... the university hired last year, is my teacher.", ops: ["she", "her", "whom", "which"], corr: 2, exp: "للمفعول به العاقل نستخدم whom." },
+                    { q: "I need to conduct some research. ......... author's books would you recommend?", ops: ["Who", "Where", "Which", "Whose"], corr: 3, exp: "للسؤال عن ملكية كتب المؤلف نستخدم Whose." },
+                    { q: "Although students disagreed, they respected ......... he said.", ops: ["which", "what", "that", "it"], corr: 1, exp: "what تُستخدم للوصل إذا كان ما قبلها فعلاً." },
+                    { q: "Sara, you must look after ......... in this cold weather.", ops: ["yourself", "myself", "herself", "himself"], corr: 0, exp: "المخاطب المفرد Sara يأخذ الضمير المنعكس yourself." },
+                    { q: "The pilot landed the plane safely despite the fault with ......... controls.", ops: ["him", "he", "its", "it"], corr: 2, exp: "ملكية غير العاقل (plane) تأخذ its." },
+                    { q: "Tom and Adam developed a new app all by .........", ops: ["ourselves", "oneselves", "theirselves", "themselves"], corr: 3, exp: "by themselves تعني بمفردهم." },
+                    { q: "The book ......... I bought yesterday is amazing.", ops: ["who", "which", "whom", "whose"], corr: 1, exp: "لغير العاقل book نستخدم which." },
+                    { q: "This is the house ......... I was born.", ops: ["where", "which", "who", "that"], corr: 0, exp: "للدلالة على المكان نستخدم where." },
+                    { q: "I cut ......... while cooking dinner.", ops: ["myself", "me", "mine", "himself"], corr: 0, exp: "الفاعل I يتطلب الضمير المنعكس myself." },
+                    { q: "This is the laptop ......... screen is broken.", ops: ["who", "which", "whose", "that"], corr: 2, exp: "لملكية اللابتوب (screen) نستخدم whose." },
+                    { q: "The girls organized the event all by .........", ops: ["themselves", "yourselves", "ourselves", "himself"], corr: 0, exp: "الجمع المؤنث/المذكر they يأخذ themselves." }
+                ];
+            } else {
+                templates = [
+                    { q: "Normally I'm busy, but I have ......... hours to go out.", ops: ["little", "a little", "a few", "much"], corr: 2, exp: "hours معدود جمع ومثبت فنستخدم a few." },
+                    { q: "Would you like ......... more coffee?", ops: ["some", "many", "a", "lot"], corr: 0, exp: "في العروض والطلبات المهذبة مع غير المعدود نستخدم some." },
+                    { q: "Lucy could have gone to London with her family, .........", ops: ["but she didn't", "so she didn't", "and she did", "but she did"], corr: 0, exp: "could have + V3 يتبعها (but she didn't)." },
+                    { q: "When you go to the store, ......... you pick up a newspaper?", ops: ["shall", "would", "should", "must"], corr: 1, exp: "للطلب المهذب نستخدم Would." },
+                    { q: "When I was 25, I ......... lift 30 kilograms easily.", ops: ["should", "could", "may", "can"], corr: 1, exp: "للتعبير عن القدرة في الماضي نستخدم could." },
+                    { q: "The second exam was ......... than the first one.", ops: ["easy", "easier", "easiest", "easily"], corr: 1, exp: "المقارنة بين طرفين لصفة قصيرة تتطلب (easier)." },
+                    { q: "Paul works very .........", ops: ["careful", "carefully", "more careful", "most careful"], corr: 1, exp: "لوصف الفعل works نستخدم الحال (carefully)." },
+                    { q: "I want ......... to the store because I need food.", ops: ["to go", "going", "to going", "that I go"], corr: 0, exp: "الفعل want يأتي بعده to + المصدر." },
+                    { q: "Professor Brown enjoyed ......... poetry.", ops: ["write", "writing", "to write", "wrote"], corr: 1, exp: "الفعل enjoy يأتي بعده V-ing." },
+                    { q: "Russia is ......... than Canada.", ops: ["bigger", "the bigger", "biggest", "the biggest"], corr: 0, exp: "مقارنة بين دولتين بصفة قصيرة (+er than)." },
+                    { q: "She is the ......... student in the class.", ops: ["smart", "smarter", "smartest", "more smart"], corr: 2, exp: "التفضيل المطلق لمجموعة يأخذ صفة مضافة لها (est) وتسبقها the (smartest)." },
+                    { q: "You ......... see a doctor if you feel sick.", ops: ["must", "should", "could", "might"], corr: 1, exp: "للنصيحة نستخدم should." },
+                    { q: "There is too ......... traffic in the city today.", ops: ["many", "few", "much", "several"], corr: 2, exp: "traffic اسم غير معدود يأخذ much." },
+                    { q: "This is the ......... car in the showroom.", ops: ["fast", "faster", "fastest", "more fast"], corr: 2, exp: "التفضيل المطلق لصفة قصيرة يأخذ (fastest)." },
+                    { q: "You ......... smoke in the hospital; it's against the law.", ops: ["must", "mustn't", "should", "can"], corr: 1, exp: "للمنع والتحريم القاطع نستخدم mustn't." }
+                ];
+            }
+
+            // Generate exactly 60 unique questions by shuffling and taking variations or building distinct permutations
+            let finalQuestions = [];
+            let shuffledPool = [...templates].sort(() => Math.random() - 0.5);
+            let counter = 1;
+            
+            while (finalQuestions.length < 60) {
+                let template = shuffledPool[(finalQuestions.length) % shuffledPool.length];
+                let shuffledOpts = [...template.options];
+                let correctText = shuffledOpts[template.corr];
+                shuffledOpts.sort(() => Math.random() - 0.5);
+                let newCorrIdx = shuffledOpts.indexOf(correctText);
+
+                // Add unique numbering prefix so each question object is distinct in instance
+                finalQuestions.push({
+                    question: `[سؤال رقم ${counter}] ${template.q.replace(/\[سؤال \d+\]\s*/g, '')}`,
+                    options: shuffledOpts,
+                    correct: newCorrIdx,
+                    explanation: template.exp
+                });
+                counter++;
+            }
+            return finalQuestions;
+        }
+
+        function renderProgressScreen() {
+            let totalVerbs = verbsData.regular.length + verbsData.irregular.length;
+            let learnedCount = state.learnedItems.length;
+            let percent = Math.round((learnedCount / totalVerbs) * 100);
+
+            return `
+                <div class="glass-card rounded-3xl p-8 md:p-12 max-w-2xl mx-auto space-y-8 border border-amber-500/40 shadow-2xl">
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">📊</div>
+                        <h3 class="text-3xl font-black text-white">تقدمي في Online Teacher Hub — My Progress</h3>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 text-center shadow-inner">
+                            <span class="text-4xl font-black text-amber-400">${state.stars}</span>
+                            <p class="text-base text-slate-300 font-bold mt-2">النجوم المحققة ⭐</p>
+                        </div>
+                        <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 text-center shadow-inner">
+                            <span class="text-4xl font-black text-blue-400">${state.points}</span>
+                            <p class="text-base text-slate-300 font-bold mt-2">إجمالي النقاط 🏆</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-base font-black text-slate-200">
+                            <span>إتقان تصريفات الأفعال</span>
+                            <span>${learnedCount} / ${totalVerbs} (${percent}%)</span>
+                        </div>
+                        <div class="w-full bg-slate-900 rounded-full h-4 overflow-hidden border border-slate-800">
+                            <div class="bg-gradient-to-r from-blue-500 to-emerald-500 h-4 rounded-full" style="width: ${percent}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 space-y-3 shadow-inner">
+                        <h4 class="font-black text-white text-base">حالة حفظ التقدم:</h4>
+                        <p class="text-base text-slate-300 font-semibold">✅ يتم حفظ نقاطك، نجومك، والأفعال التي أتقنتها واجتيازات اختبارات 90% تلقائياً في جهازك (LocalStorage).</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAchievementsScreen() {
+            const badges = [
+                { title: "مستكشف الأفعال", desc: "أتقن 15 فعلاً من القائمة", unlocked: state.learnedItems.length >= 15, icon: "📖" },
+                { title: "خبير أزمنة الكفايات", desc: "اجتاز امتحان القرامر الأول بنسبة 90%+", unlocked: (state.examScores[1] || 0) >= 54, icon: "⚙️" },
+                { title: "سيد القرامر والروابط", desc: "اجتاز جميع مستويات القرامر الأربعة بنجاح", unlocked: (state.examScores[4] || 0) >= 54, icon: "⏳" },
+                { title: "بطل Online Teacher Hub", desc: "اجمع أكثر من 40 نقطة تفاعلية", unlocked: state.points >= 40, icon: "🏆" }
+            ];
+
+            return `
+                <div class="glass-card rounded-3xl p-8 md:p-12 max-w-2xl mx-auto space-y-8 border border-sky-500/40 shadow-2xl">
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">🏆</div>
+                        <h3 class="text-3xl font-black text-white">الأوسمة وشارات التفوق — Achievements</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-5">
+                        ${badges.map(b => `
+                            <div class="p-6 rounded-3xl border flex items-center gap-6 ${b.unlocked ? 'bg-sky-500/15 border-sky-500/50 text-white' : 'bg-slate-900 border-slate-800 text-slate-400 opacity-60'} shadow">
+                                <div class="text-4xl">${b.icon}</div>
+                                <div>
+                                    <h4 class="font-black text-lg ${b.unlocked ? 'text-sky-300' : 'text-slate-300'}">${b.title}</h4>
+                                    <p class="text-base text-slate-300 font-semibold">${b.desc}</p>
+                                </div>
+                                <div class="mr-auto">
+                                    <span class="text-sm font-black px-4 py-2 rounded-2xl ${b.unlocked ? 'bg-sky-500/20 text-sky-300 border border-sky-500/40' : 'bg-slate-800 text-slate-400'}">
+                                        ${b.unlocked ? 'مُحرز ✅' : 'مقفل 🔒'}
+                                    </span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        window.onload = function() {
+            render();
+        };
+    </script>
+</body>
+</html>
